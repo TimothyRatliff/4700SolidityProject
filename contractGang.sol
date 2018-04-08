@@ -1,26 +1,97 @@
 pragma solidity ^0.4.0;
-contract DateTime {
-    //This is an "abstract contract" basically there's no library functions in Solidity
-    //people push contracts to the block chain and you can query them like you're accessing
-    //a library. So someone wrote a "DateTime" contract that we're going to be using.
-
-
-
-}
 
 contract Will {
 
-    //Outlines a structure for a specific deadline
-    struct Deadline {
-        uint16 year;
-        uint8 month;
-        uint day;
+    //The following UNIX timestamp code was provided by pipermerriam on Github
+    //We would use the contract API that they provided, but in testing we cannot
+    //actually access the contract on the block chain in order to make function calls
+    //so this code has been copied in to provide the same code reusability their contract
+    //would provide on the real Ethereum network.
+
+    //begin pipermerriam code
+    uint constant DAY_IN_SECONDS = 86400;
+    uint constant YEAR_IN_SECONDS = 31536000;
+    uint constant LEAP_YEAR_IN_SECONDS = 31622400;
+
+    uint constant HOUR_IN_SECONDS = 3600;
+    uint constant MINUTE_IN_SECONDS = 60;
+    uint16 constant ORIGIN_YEAR = 1970;
+
+    function isLeapYear(uint16 year) public pure returns (bool) {
+        if (year % 4 != 0) {
+          return false;
+        }
+        if (year % 100 != 0) {
+          return true;
+        }
+        if (year % 400 != 0) {
+          return false;
+        }
+        return true;
+      }
+
+    function toTimestamp(uint16 year, uint8 month, uint8 day) public pure returns (uint timestamp) {
+      return toTimestamp(year, month, day, 0, 0, 0);
+      }
+
+    function toTimestamp(uint16 year, uint8 month, uint8 day,
+    uint8 hour, uint8 minute, uint8 second) public pure returns (uint timestamp) {
+
+      uint16 i;
+
+      for (i = ORIGIN_YEAR; i < year; i++) {
+        if (isLeapYear(i)) {
+          timestamp += LEAP_YEAR_IN_SECONDS;
+        }
+        else {
+          timestamp += YEAR_IN_SECONDS;
+        }
+      }
+
+      // Month
+      uint8[12] memory monthDayCounts;
+      monthDayCounts[0] = 31;
+      if (isLeapYear(year)) {
+        monthDayCounts[1] = 29;
+      }
+      else {
+        monthDayCounts[1] = 28;
+      }
+      monthDayCounts[2] = 31;
+      monthDayCounts[3] = 30;
+      monthDayCounts[4] = 31;
+      monthDayCounts[5] = 30;
+      monthDayCounts[6] = 31;
+      monthDayCounts[7] = 31;
+      monthDayCounts[8] = 30;
+      monthDayCounts[9] = 31;
+      monthDayCounts[10] = 30;
+      monthDayCounts[11] = 31;
+
+      for (i = 1; i < month; i++) {
+        timestamp += DAY_IN_SECONDS * monthDayCounts[i - 1];
+      }
+      // Day
+      timestamp += DAY_IN_SECONDS * (day - 1);
+
+      // Hour
+      timestamp += HOUR_IN_SECONDS * (hour);
+
+      // Minute
+      timestamp += MINUTE_IN_SECONDS * (minute);
+
+      // Second
+      timestamp += second;
+
+      return timestamp;
     }
+//End of pipermerriam code.
 
     //Field variables for a Will contract. As best I can tell, the constant keyword prevents them
     //from being altered similar to the final keywod. While private prevents them from being accessd
     //From outside the contract
-    Deadline deadline;
+    //Deadline deadline;
+    uint deadline;
     bytes passWordFirstHalf;
     bytes passWordSecondHalf;
     uint numOfEthers;
@@ -28,13 +99,14 @@ contract Will {
     //Will Constructor. The payable keyword allows ether to be attatched to the creation of This
     //object.
     //I guess you cant pass a structure into a constructor? We should be able to work aruond this.
-    function Will(Deadline _deadline, string _passWordFirstHalf,
+    function Will(uint8 _month, uint8 _day, uint16 _year, string _passWordFirstHalf,
     string _passWordSecondHalf, uint _numOfEthers) payable public {
+
 
         //Research shows that date times in Solidity are typically saved as unsigned ints
         //Though we could create our own enum data type to handle a textual input.
         //Not sure what will work best yet.
-        deadline = _deadline;
+        deadline = toTimestamp(_year, _month, _day);
 
         //casts the string objects to bytes and then stores them.
         passWordFirstHalf = bytes(_passWordFirstHalf);
@@ -55,7 +127,8 @@ contract Will {
     function variables will be stored in the EVM memory and should be declared as
     such...I think.
     */
-    function jackWithdraw(string memory _enteredPassWordFirstHalf, string memory _enteredPassWordSecondHalf){
+    function jackWithdraw(string memory _enteredPassWordFirstHalf,
+      string memory _enteredPassWordSecondHalf) public {
         //Converts Jack's input to bytes.
         bytes memory enteredPassWordFirstHalf = bytes(_enteredPassWordFirstHalf);
         bytes memory enteredPassWordSecondHalf = bytes(_enteredPassWordSecondHalf);
@@ -80,7 +153,8 @@ contract Will {
     }
 
     //See the blurb above Jack's withdraw
-    function ngoWithdraw(string memory _passWordSecondHalf){
+    function ngoWithdraw(string memory _passWordSecondHalf) public {
+
         //Converts ngo input to bytes
         bytes memory enteredPassWordSecondHalf = bytes(_passWordSecondHalf);
 
