@@ -1,5 +1,9 @@
 pragma solidity ^0.4.0;
 
+//CSC4700
+//04-08-2018
+//Thomas Johnson & Timothy Ratliff
+//Will Contract Project
 contract Will {
 
     //The following UNIX timestamp code was provided by pipermerriam on Github
@@ -87,9 +91,7 @@ contract Will {
     }
 //End of pipermerriam code.
 
-    //Field variables for a Will contract. As best I can tell, the constant keyword prevents them
-    //from being altered similar to the final keywod. While private prevents them from being accessd
-    //From outside the contract
+
     //Deadline deadline;
     uint deadline;
     bytes passWordFirstHalf;
@@ -98,14 +100,12 @@ contract Will {
 
     //Will Constructor. The payable keyword allows ether to be attatched to the creation of This
     //object.
-    //I guess you cant pass a structure into a constructor? We should be able to work aruond this.
     function Will(uint8 _month, uint8 _day, uint16 _year, string _passWordFirstHalf,
     string _passWordSecondHalf, uint _numOfEthers) payable public {
 
 
         //Research shows that date times in Solidity are typically saved as unsigned ints
         //Though we could create our own enum data type to handle a textual input.
-        //Not sure what will work best yet.
         deadline = toTimestamp(_year, _month, _day);
 
         //casts the string objects to bytes and then stores them.
@@ -125,7 +125,7 @@ contract Will {
     is coming from the contract itself it is "storage" Which I think is the
     implicit setting. Since Jack's withdraw relies on user input or call Those
     function variables will be stored in the EVM memory and should be declared as
-    such...I think.
+    such.
     */
     function jackWithdraw(string memory _enteredPassWordFirstHalf,
       string memory _enteredPassWordSecondHalf) public {
@@ -137,9 +137,7 @@ contract Will {
         //them against one another.
         if(keccak256(enteredPassWordFirstHalf) == keccak256(passWordFirstHalf)){
             if(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf)){
-                //Send the balance of the contract to Jack.
-                //msg.sender.transfer(address(this).balance);
-                //Apparently this also works?
+
                 selfdestruct(msg.sender);
             }
             else{
@@ -162,9 +160,7 @@ contract Will {
           //them against one another.
 
         if(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf)){
-              //Send the balance of the contract to Jack.
-              //msg.sender.transfer(address(this).balance);
-              //Apparently this is better?
+
             selfdestruct(msg.sender);
         }
         else{
