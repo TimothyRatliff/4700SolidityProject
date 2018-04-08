@@ -17,7 +17,7 @@ contract Will {
     uint constant MINUTE_IN_SECONDS = 60;
     uint16 constant ORIGIN_YEAR = 1970;
 
-    function isLeapYear(uint16 year) public pure returns (bool) {
+    function isLeapYear(uint16 year) private pure returns (bool) {
         if (year % 4 != 0) {
           return false;
         }
@@ -30,12 +30,12 @@ contract Will {
         return true;
       }
 
-    function toTimestamp(uint16 year, uint8 month, uint8 day) public pure returns (uint timestamp) {
+    function toTimestamp(uint16 year, uint8 month, uint8 day) private pure returns (uint timestamp) {
       return toTimestamp(year, month, day, 0, 0, 0);
       }
 
     function toTimestamp(uint16 year, uint8 month, uint8 day,
-    uint8 hour, uint8 minute, uint8 second) public pure returns (uint timestamp) {
+    uint8 hour, uint8 minute, uint8 second) private pure returns (uint timestamp) {
 
       uint16 i;
 
