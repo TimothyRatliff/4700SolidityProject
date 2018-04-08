@@ -154,23 +154,25 @@ contract Will {
 
     //See the blurb above Jack's withdraw
     function ngoWithdraw(string memory _passWordSecondHalf) public {
-
-        //Converts ngo input to bytes
+      if(block.timestamp > deadline){
+          //Converts ngo input to bytes
         bytes memory enteredPassWordSecondHalf = bytes(_passWordSecondHalf);
 
-        //Hashes the entered password and the stored password and then compares
-        //them against one another.
+          //Hashes the entered password and the stored password and then compares
+          //them against one another.
 
         if(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf)){
-            //Send the balance of the contract to Jack.
-            //msg.sender.transfer(address(this).balance);
-            //Apparently this is better?
+              //Send the balance of the contract to Jack.
+              //msg.sender.transfer(address(this).balance);
+              //Apparently this is better?
             selfdestruct(msg.sender);
         }
         else{
-            //Password hashes dont match. Do nothing.
+              //Password hashes dont match. Do nothing.
         }
-
+      }
+      else{
+        //Do nothing, the deadline hasn't passed yet.
+      }
     }
-
 }
