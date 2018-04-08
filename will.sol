@@ -128,7 +128,7 @@ contract Will {
     such.
     */
     function jackWithdraw(string memory _enteredPassWordFirstHalf,
-      string memory _enteredPassWordSecondHalf) public {
+      string memory _enteredPassWordSecondHalf) payable public {
         //Converts Jack's input to bytes.
         bytes memory enteredPassWordFirstHalf = bytes(_enteredPassWordFirstHalf);
         bytes memory enteredPassWordSecondHalf = bytes(_enteredPassWordSecondHalf);
@@ -141,7 +141,7 @@ contract Will {
     }
 
     //See the blurb above Jack's withdraw
-    function ngoWithdraw(string memory _passWordSecondHalf) public {
+    function ngoWithdraw(string memory _passWordSecondHalf) payable public {
       //This requirement must be met before the contract proceeds
       require(block.timestamp > deadline);
         //Converts ngo input to bytes
@@ -150,4 +150,5 @@ contract Will {
       //them against one another. Require cancels the transactions if the condition is not met.
       require(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf));
       selfdestruct(msg.sender);
+    }
 }
