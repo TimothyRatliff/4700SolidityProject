@@ -134,41 +134,20 @@ contract Will {
         bytes memory enteredPassWordSecondHalf = bytes(_enteredPassWordSecondHalf);
 
         //Hashes the bytes of the stored passwords and the entered passwords and then compares
-        //them against one another.
-        if(keccak256(enteredPassWordFirstHalf) == keccak256(passWordFirstHalf)){
-            if(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf)){
-
-                selfdestruct(msg.sender);
-            }
-            else{
-                //Password hashes don't match. Do Nothing
-
-            }
-        }
-        else{
-            //Password hashes don't match. Do Nothing.
-        }
+        //them against one another. Require cancels the transactions if the condition is not met.
+        require(keccak256(enteredPassWordFirstHalf) == keccak256(passWordFirstHalf));
+        require(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf));
+        selfdestruct(msg.sender);
     }
 
     //See the blurb above Jack's withdraw
     function ngoWithdraw(string memory _passWordSecondHalf) public {
-      if(block.timestamp > deadline){
-          //Converts ngo input to bytes
-        bytes memory enteredPassWordSecondHalf = bytes(_passWordSecondHalf);
-
-          //Hashes the entered password and the stored password and then compares
-          //them against one another.
-
-        if(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf)){
-
-            selfdestruct(msg.sender);
-        }
-        else{
-              //Password hashes dont match. Do nothing.
-        }
-      }
-      else{
-        //Do nothing, the deadline hasn't passed yet.
-      }
-    }
+      //This requirement must be met before the contract proceeds
+      require(block.timestamp > deadline);
+        //Converts ngo input to bytes
+      bytes memory enteredPassWordSecondHalf = bytes(_passWordSecondHalf);
+      //Hashes the bytes of the stored passwords and the entered passwords and then compares
+      //them against one another. Require cancels the transactions if the condition is not met.
+      require(keccak256(enteredPassWordSecondHalf) == keccak256(passWordSecondHalf));
+      selfdestruct(msg.sender);
 }
