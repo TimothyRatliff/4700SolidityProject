@@ -1,7 +1,7 @@
 pragma solidity ^0.4.0;
 
 //CSC4700
-//04-08-2018
+//04-11-2018
 //Thomas Johnson & Timothy Ratliff
 //Will Contract Project
 contract Will {
