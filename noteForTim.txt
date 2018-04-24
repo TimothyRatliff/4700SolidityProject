@@ -1,0 +1,13 @@
+Timothy,
+
+You'll notice that there is a nice new directory inside of this one.
+That is our nice new webApp testing zone. I haven't tested it yet, but it should
+be to the point where you can migrate contracts and then run some tests. I left
+some of the index files in there that came with the webpack as well as the ones
+that Mohammed already gave us. Those will show you what all we need to import
+etc. 
+
+So we really just have to use those as templates for our code. Maybe even just
+change the JS. and HTML to our liking. I know you're good with the web app side
+of things. I'll get as much work done on the JS side that I can, but I have to
+get some research stuff done.
