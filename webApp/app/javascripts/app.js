@@ -1,8 +1,15 @@
-const Promise = require("bluebird");
-const truffleContract = require("truffle-contract");
-const $ = require("jquery");
-const willJson = require("../../build/contracts/Will.json");
-require("file-loader?name=../index.html!../index.html");
+//const Promise = require("../../node_modules/bluebird/release/bluebird.js");
+//const truffleContract = require("truffle-contract");
+//const $ = require("jquery");
+//const willJson = require("../../build/contracts/Will.json");
+//const fileLoader = require("file-loader?name=../index.html!../index.html");
+//Web3 = require('web3')
+import {default as bluebird} from 'bluebird';
+import {default as truffleContract } from 'truffle-contract';
+import {default as Web3} from 'web3';
+import {default as fileLoader  } from 'file-loader?name=../index.html!../index.html';
+import $ from 'jquery';
+import willJson from '../../build/contracts/Will.json';
 
 // Supports Mist, and other wallets that provide 'web3'.
 if (typeof web3 !== 'undefined') {
@@ -29,7 +36,7 @@ function sequentialPromise(promiseArray) {
             };
         },
         {
-            chain: Promise.resolve(),
+            chain: bluebird.resolve(),
             results: []
         });
     return result.chain.then(() => result.results);
@@ -37,10 +44,10 @@ function sequentialPromise(promiseArray) {
 
 //See above comment
 sequentialPromise([
-    Promise.resolve(web3.eth), Promise.resolve({ suffix: "Promise" })
+    bluebird.resolve(web3.eth), bluebird.resolve({ suffix: "Promise" })
 ]).then(console.log);
 web3.eth.getAccountsPromise = function () {
-    return new Promise(function (resolve, reject) {
+    return new bluebird(function (resolve, reject) {
         web3.eth.getAccounts(function (e, accounts) {
             if (e != null) {
                 reject(e);
@@ -54,7 +61,7 @@ web3.eth.getAccountsPromise = function () {
 //So this connects the Will variable to the "will json" This file is created
 //by Truffle when you build the contract. It's some fancy JSON that holds all
 //of the test network data or something.
-const Will = truffleContract(willJson);
+const Will = truffle-contract("../../build/contracts/Will.json");
 Will.setProvider(web3.currentProvider);
 //This sets the default owner of the will to the 0th account
 Will.defaults({
@@ -67,14 +74,11 @@ window.addEventListener('load', function(){
   //This dollar sign is basically the equivalent of writing jquery. in front
   //of the function. We pass it the id of the withdrawButton which then
   //(<----- ayyy) adds an event listener function to the button.
-  $("#withdrawButton").click(function(){
+  jquery("#withdrawButton").click(function(){
     return withdrawFunction().then(updated=>{
       window.location.reload();
     });
   });
-  //Not yet implemented, but what this will do I assume is update the UserInterface
-  //In some way.
-  UserInterface();
 });
 
 //So I kind of copied the code from the example on this one, but not super hard.
@@ -85,9 +89,10 @@ window.addEventListener('load', function(){
 const withdrawFunction = function(){
   return Will.deployed().then(_deployed=>{
     deployed = _deployed;
-    return deployed.jackWithdraw($("input['name=FirstHalf']").val(), $("input['name=SecondHalf']").val()).then(authenticated=>{
+    return deployed.jackWithdraw(jquery("input['name=FirstHalf']").val(), jquery("input['name=SecondHalf']").val()).then(authenticated=>{
       if(authenticated){
-        return deployed.jackWithdraw($("input['name=FirstHalf']").val(), $("input['name=SecondHalf']").val())
+        alert("Passwords correct, your ether is on its way son.");
+        return deployed.jackWithdraw(jquery("input['name=FirstHalf']").val(), jquery("input['name=SecondHalf']").val());
       }
       else{
         alert("Password Invalid");
