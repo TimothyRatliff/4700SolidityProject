@@ -4,7 +4,7 @@
 //const willJson = require("../../build/contracts/Will.json");
 //const fileLoader = require("file-loader?name=../index.html!../index.html");
 //Web3 = require('web3')
-import {default as bluebird} from 'bluebird';
+import {default as Promise} from 'bluebird';
 import {default as truffleContract } from 'truffle-contract';
 import {default as Web3} from 'web3';
 import {default as fileLoader  } from 'file-loader?name=../index.html!../index.html';
@@ -36,7 +36,7 @@ function sequentialPromise(promiseArray) {
             };
         },
         {
-            chain: bluebird.resolve(),
+            chain: Promise.resolve(),
             results: []
         });
     return result.chain.then(() => result.results);
@@ -44,10 +44,10 @@ function sequentialPromise(promiseArray) {
 
 //See above comment
 sequentialPromise([
-    bluebird.resolve(web3.eth), bluebird.resolve({ suffix: "Promise" })
+    Promise.resolve(web3.eth), Promise.resolve({ suffix: "Promise" })
 ]).then(console.log);
 web3.eth.getAccountsPromise = function () {
-    return new bluebird(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
         web3.eth.getAccounts(function (e, accounts) {
             if (e != null) {
                 reject(e);
@@ -61,7 +61,7 @@ web3.eth.getAccountsPromise = function () {
 //So this connects the Will variable to the "will json" This file is created
 //by Truffle when you build the contract. It's some fancy JSON that holds all
 //of the test network data or something.
-const Will = truffle-contract("../../build/contracts/Will.json");
+const Will = truffleContract("willJson");
 Will.setProvider(web3.currentProvider);
 //This sets the default owner of the will to the 0th account
 Will.defaults({
@@ -74,7 +74,8 @@ window.addEventListener('load', function(){
   //This dollar sign is basically the equivalent of writing jquery. in front
   //of the function. We pass it the id of the withdrawButton which then
   //(<----- ayyy) adds an event listener function to the button.
-  jquery("#withdrawButton").click(function(){
+  $("#withdrawButton").click(function(){
+    console.log("I heard your click");
     return withdrawFunction().then(updated=>{
       window.location.reload();
     });
@@ -89,10 +90,10 @@ window.addEventListener('load', function(){
 const withdrawFunction = function(){
   return Will.deployed().then(_deployed=>{
     deployed = _deployed;
-    return deployed.jackWithdraw(jquery("input['name=FirstHalf']").val(), jquery("input['name=SecondHalf']").val()).then(authenticated=>{
+    return deployed.jackWithdraw($("input['name=FirstHalf']").val(), $("input['name=SecondHalf']").val()).then(authenticated=>{
       if(authenticated){
         alert("Passwords correct, your ether is on its way son.");
-        return deployed.jackWithdraw(jquery("input['name=FirstHalf']").val(), jquery("input['name=SecondHalf']").val());
+        return deployed.jackWithdraw($("input['name=FirstHalf']").val(), $("input['name=SecondHalf']").val());
       }
       else{
         alert("Password Invalid");
