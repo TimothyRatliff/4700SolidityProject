@@ -1,15 +1,9 @@
-//const Promise = require("../../node_modules/bluebird/release/bluebird.js");
-//const truffleContract = require("truffle-contract");
-//const $ = require("jquery");
-//const willJson = require("../../build/contracts/Will.json");
-//const fileLoader = require("file-loader?name=../index.html!../index.html");
-//Web3 = require('web3')
-import {default as Promise} from 'bluebird';
-import {default as truffleContract } from 'truffle-contract';
-import {default as Web3} from 'web3';
-import {default as fileLoader  } from 'file-loader?name=../index.html!../index.html';
-import $ from 'jquery';
-import willJson from '../../build/contracts/Will.json';
+var Promise = require("bluebird");
+var truffleContract = require("truffle-contract");
+var $ = require("jquery");
+var willJson = require("../../build/contracts/Will.json");
+var fileLoader = require("file-loader?name=../index.html!../index.html");
+var Web3 = require('web3')
 
 // Supports Mist, and other wallets that provide 'web3'.
 if (typeof web3 !== 'undefined') {
@@ -21,7 +15,7 @@ else {
   window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 
-web3.eth.getTransactionReceiptMined = require("./utils.js");
+web3.eth.getTransactionReceiptMined = require("utils");
 
 //Copied straight from the class example. Trying to figure out exactly what this does.
 function sequentialPromise(promiseArray) {
