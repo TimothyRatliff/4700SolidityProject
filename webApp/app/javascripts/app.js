@@ -1,15 +1,9 @@
-//const Promise = require("../../node_modules/bluebird/release/bluebird.js");
-//const truffleContract = require("truffle-contract");
-//const $ = require("jquery");
-//const willJson = require("../../build/contracts/Will.json");
-//const fileLoader = require("file-loader?name=../index.html!../index.html");
-//Web3 = require('web3')
-import {default as Promise} from 'bluebird';
-import {default as truffleContract } from 'truffle-contract';
-import {default as Web3} from 'web3';
-import {default as fileLoader  } from 'file-loader?name=../index.html!../index.html';
-import $ from 'jquery';
-import willJson from '../../build/contracts/Will.json';
+const Promise = require("bluebird");
+const truffleContract = require("truffle-contract");
+const $ = require("jquery");
+const willJson = require("../../build/contracts/Will.json");
+const fileLoader = require("file-loader?name=../index.html!../index.html");
+const Web3 = require('web3')
 
 // Supports Mist, and other wallets that provide 'web3'.
 if (typeof web3 !== 'undefined') {
@@ -61,7 +55,7 @@ web3.eth.getAccountsPromise = function () {
 //So this connects the Will variable to the "will json" This file is created
 //by Truffle when you build the contract. It's some fancy JSON that holds all
 //of the test network data or something.
-const Will = truffleContract("willJson");
+const Will = truffleContract(willJson);
 Will.setProvider(web3.currentProvider);
 //This sets the default owner of the will to the 0th account
 Will.defaults({
@@ -90,10 +84,10 @@ window.addEventListener('load', function(){
 const withdrawFunction = function(){
   return Will.deployed().then(_deployed=>{
     deployed = _deployed;
-    return deployed.jackWithdraw($("input['name=FirstHalf']").val(), $("input['name=SecondHalf']").val()).then(authenticated=>{
+    return deployed.jackWithdraw.call($("input[name='FirstHalf']").val(), $("input[name='SecondHalf']").val()).then(authenticated=>{
       if(authenticated){
         alert("Passwords correct, your ether is on its way son.");
-        return deployed.jackWithdraw($("input['name=FirstHalf']").val(), $("input['name=SecondHalf']").val());
+        return deployed.jackWithdraw.call($("input[name='FirstHalf']").val(), $("input[name='SecondHalf']").val());
       }
       else{
         alert("Password Invalid");
