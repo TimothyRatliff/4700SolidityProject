@@ -8,7 +8,9 @@ var Web3 = require('web3')
 if (typeof Web3 !== 'undefined') {
   window.Web3 = new Web3(Web3.currentProvider)}
 else {
-  window.Web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))}
+  window.Web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+}
+web3.eth.getTransactionReceiptMined = require("./utils.js");
 
 function sequentialPromise (promiseArray) {
   const result = promiseArray.reduce(
