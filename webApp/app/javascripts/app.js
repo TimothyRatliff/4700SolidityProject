@@ -70,9 +70,14 @@ window.addEventListener('load', function(){
   //(<----- ayyy) adds an event listener function to the button.
   $("#withdrawButton").click(function(){
     console.log("I heard your click");
-    return withdrawFunction().then(updated=>{
-      window.location.reload();
-    });
+    try{
+      return withdrawFunction().then(updated=>{
+        window.location.reload();
+      });
+    }
+    catch(exception){
+      alert("Password Incorrect. Nice try.");
+    }
   });
 });
 
@@ -82,16 +87,17 @@ window.addEventListener('load', function(){
 //inputs that the user provided by using Jquery library functions.
 //the .val() may or may not be needed. Not sure yet.
 const withdrawFunction = function(){
-  return Will.deployed().then(_deployed=>{
-    deployed = _deployed;
-    return deployed.jackWithdraw.call($("input[name='FirstHalf']").val(), $("input[name='SecondHalf']").val()).then(authenticated=>{
-      if(authenticated){
-        alert("Passwords correct, your ether is on its way son.");
-        return deployed.jackWithdraw.call($("input[name='FirstHalf']").val(), $("input[name='SecondHalf']").val());
-      }
-      else{
-        alert("Password Invalid");
-      }
-    })
+    return Will.deployed().then(_deployed=>{
+      deployed = _deployed;
+      console.log("deployed = _deployed");
+      return deployed.jackWithdraw.call($("input[name='FirstHalf']").val(), $("input[name='SecondHalf']").val()).then(authenticated=>{
+        if(authenticated){
+          alert("Passwords correct, your ether is on its way son.");
+          return deployed.jackWithdraw.call($("input[name='FirstHalf']").val(), $("input[name='SecondHalf']").val());
+        }
+        else{
+          alert("Password Incorrect. Nice try.");
+        }
+      });
   });
 }
